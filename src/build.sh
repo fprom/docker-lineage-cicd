@@ -70,12 +70,12 @@ if [ "$LOCAL_MIRROR" = true ]; then
   rm -f .repo/local_manifests/proprietary.xml
   if [ "$INCLUDE_PROPRIETARY" = true ]; then
     wget -q -O .repo/local_manifests/proprietary.xml "https://raw.githubusercontent.com/TheMuppets/manifests/mirror/default.xml"
-    /root/build_manifest.py --remote "https://gitlab.com" --remotename "gitlab_https" \
-      "https://gitlab.com/the-muppets/manifest/raw/mirror/default.xml" .repo/local_manifests/proprietary_gitlab.xml
+#    /root/build_manifest.py --remote "https://gitlab.com" --remotename "gitlab_https" \
+#      "https://gitlab.com/the-muppets/manifest/raw/mirror/default.xml" .repo/local_manifests/proprietary_gitlab.xml
   fi
 
   echo ">> [$(date)] Syncing mirror repository" | tee -a "$repo_log"
-  repo sync --force-sync --no-clone-bundle &>> "$repo_log"
+  repo sync --force-sync --no-clone-bundle -j`nproc` &>> "$repo_log"
 fi
 
 for branch in ${BRANCH_NAME//,/ }; do
@@ -133,13 +133,13 @@ for branch in ${BRANCH_NAME//,/ }; do
         echo ">> [$(date)] Can't find a matching branch on github.com/TheMuppets, using $themuppets_branch"
       fi
       wget -q -O .repo/local_manifests/proprietary.xml "https://raw.githubusercontent.com/TheMuppets/manifests/$themuppets_branch/muppets.xml"
-      /root/build_manifest.py --remote "https://gitlab.com" --remotename "gitlab_https" \
-        "https://gitlab.com/the-muppets/manifest/raw/$themuppets_branch/muppets.xml" .repo/local_manifests/proprietary_gitlab.xml
+#      /root/build_manifest.py --remote "https://gitlab.com" --remotename "gitlab_https" \
+#        "https://gitlab.com/the-muppets/manifest/raw/$themuppets_branch/muppets.xml" .repo/local_manifests/proprietary_gitlab.xml
     fi
 
     echo ">> [$(date)] Syncing branch repository" | tee -a "$repo_log"
     builddate=$(date +%Y%m%d)
-    repo sync -c --force-sync &>> "$repo_log"
+    repo sync -j`nproc` -c --force-sync &>> "$repo_log"
 
 
     android_version=$(sed -n -e 's/^\s*PLATFORM_VERSION\.QP1A := //p' build/core/version_defaults.mk)
@@ -298,12 +298,12 @@ for branch in ${BRANCH_NAME//,/ }; do
           if [ "$LOCAL_MIRROR" = true ]; then
             echo ">> [$(date)] Syncing mirror repository" | tee -a "$repo_log"
             cd "$MIRROR_DIR"
-            repo sync --force-sync --no-clone-bundle &>> "$repo_log"
+            repo sync -j`nproc` --force-sync --no-clone-bundle &>> "$repo_log"
           fi
 
           echo ">> [$(date)] Syncing branch repository" | tee -a "$repo_log"
           cd "$SRC_DIR/$branch_dir"
-          repo sync -c --force-sync &>> "$repo_log"
+          repo sync -j`nproc` -c --force-sync &>> "$repo_log"
         fi
 
         if [ "$BUILD_OVERLAY" = true ]; then
@@ -354,6 +354,7 @@ for branch in ${BRANCH_NAME//,/ }; do
 
           if [ "$BOOT_IMG" = true ]; then
             find . -maxdepth 1 -name 'boot.img' -type f -exec mv {} "$ZIP_DIR/$zipsubdir/" \; &>> "$DEBUG_LOG"
+            find . -maxdepth 1 -name 'recovery.img' -type f -exec mv {} "$ZIP_DIR/$zipsubdir/" \; &>> "$DEBUG_LOG"
           fi
           cd "$source_dir"
           build_successful=true
