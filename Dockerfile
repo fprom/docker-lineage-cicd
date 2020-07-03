@@ -35,18 +35,18 @@ ENV CCACHE_SIZE 50G
 
 # Environment for the LineageOS branches name
 # See https://github.com/LineageOS/android_vendor_cm/branches for possible options
-ENV BRANCH_NAME 'lineage-16.0'
+ENV BRANCH_NAME 'lineage-17.1'
 
 # Environment for the device list (separate by comma if more than one)
 # eg. DEVICE_LIST=hammerhead,bullhead,angler
-ENV DEVICE_LIST ''
+ENV DEVICE_LIST 'starlte'
 
 # Release type string
-ENV RELEASE_TYPE 'UNOFFICIAL'
+ENV RELEASE_TYPE 'FPROM'
 
 # OTA URL that will be used inside CMUpdater
 # Use this in combination with LineageOTA to make sure your device can auto-update itself from this buildbot
-ENV OTA_URL ''
+ENV OTA_URL 'https://dotbjorn.net/fpromota'
 
 # User identity
 ENV USER_NAME 'LineageOS Buildbot'
@@ -71,7 +71,7 @@ ENV CLEAN_OUTDIR false
 ENV CRONTAB_TIME 'now'
 
 # Put the boot.img in the zips directory
-ENV BOOT_IMG false
+ENV BOOT_IMG true
 
 # Clean artifacts output after each build
 ENV CLEAN_AFTER_BUILD true
@@ -80,16 +80,16 @@ ENV CLEAN_AFTER_BUILD true
 ENV WITH_SU false
 
 # Provide a default JACK configuration in order to avoid out-of-memory issues
-ENV ANDROID_JACK_VM_ARGS "-Dfile.encoding=UTF-8 -XX:+TieredCompilation -Xmx4G"
+ENV ANDROID_JACK_VM_ARGS "-Dfile.encoding=UTF-8 -XX:+TieredCompilation -Xmx8G"
 
 # Custom packages to be installed
-ENV CUSTOM_PACKAGES ''
+ENV CUSTOM_PACKAGES 'nanodroid'
 
 # Sign the builds with the keys in $KEYS_DIR
-ENV SIGN_BUILDS false
+ENV SIGN_BUILDS true
 
 # When SIGN_BUILDS = true but no keys have been provided, generate a new set with this subject
-ENV KEYS_SUBJECT '/C=US/ST=California/L=Mountain View/O=Android/OU=Android/CN=Android/emailAddress=android@android.com'
+ENV KEYS_SUBJECT '/C=GB/ST=FPRom/L=FPRom/O=FPRom/OU=FPRom/CN=FPROM/emailAddress=fprom@example.com'
 
 # Move the resulting zips to $ZIP_DIR/$codename instead of $ZIP_DIR/
 ENV ZIP_SUBDIR true
@@ -106,10 +106,10 @@ ENV LOGS_SUBDIR true
 # restricted patch and embedding the apps that requires it as system privileged
 # apps is a much secure option. See the README.md ("Custom mode") for an
 # example.
-ENV SIGNATURE_SPOOFING "no"
+ENV SIGNATURE_SPOOFING "restricted"
 
 # Apply the microG unifiedNLP patch
-ENV SUPPORT_UNIFIEDNLP false
+ENV SUPPORT_UNIFIEDNLP true
 
 # Generate delta files
 ENV BUILD_DELTA false
@@ -127,10 +127,10 @@ ENV DELETE_OLD_LOGS 0
 # (for the updates in OpenDelta). The file will be created in $ZIP_DIR with the
 # specified name; leave empty to skip it.
 # Requires ZIP_SUBDIR.
-ENV OPENDELTA_BUILDS_JSON ''
+ENV OPENDELTA_BUILDS_JSON 'build.json'
 
 # set the java tool options max memory size
-ENV JAVA_TOOL_OPTIONS "-Xmx6g"
+ENV JAVA_TOOL_OPTIONS "-Xmx20g"
 
 # You can optionally specify a USERSCRIPTS_DIR volume containing these scripts:
 #  * begin.sh, run at the very beginning
