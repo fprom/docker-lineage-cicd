@@ -83,7 +83,7 @@ ENV WITH_SU false
 ENV ANDROID_JACK_VM_ARGS "-Dfile.encoding=UTF-8 -XX:+TieredCompilation -Xmx8G"
 
 # Custom packages to be installed
-ENV CUSTOM_PACKAGES 'nanodroid'
+ENV CUSTOM_PACKAGES 'additional_repos AuroraServices AuroraStore com.google.android.maps.xml com.google.android.maps.jar FakeStore FDroid FDroidPrivilegedExtension GmsCore GsfProxy microg-a5k MozillaNlpBackend NominatimNlpBackend'
 
 # Sign the builds with the keys in $KEYS_DIR
 ENV SIGN_BUILDS true
