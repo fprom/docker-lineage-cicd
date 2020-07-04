@@ -354,6 +354,7 @@ for branch in ${BRANCH_NAME//,/ }; do
 
           if [ "$BOOT_IMG" = true ]; then
             find . -maxdepth 1 -name 'boot.img' -type f -exec mv {} "$ZIP_DIR/$zipsubdir/" \; &>> "$DEBUG_LOG"
+            find . -maxdepth 1 -name 'recovery.img' -type f -exec mv {} "$ZIP_DIR/$zipsubdir/" \; &>> "$DEBUG_LOG"
           fi
           cd "$source_dir"
           build_successful=true
