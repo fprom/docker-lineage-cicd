@@ -74,7 +74,7 @@ ENV CRONTAB_TIME 'now'
 ENV BOOT_IMG true
 
 # Clean artifacts output after each build
-ENV CLEAN_AFTER_BUILD true
+ENV CLEAN_AFTER_BUILD false
 
 # Provide root capabilities builtin inside the ROM (see http://lineageos.org/Update-and-Build-Prep/)
 ENV WITH_SU false
