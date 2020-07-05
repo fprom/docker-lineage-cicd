@@ -70,8 +70,6 @@ if [ "$LOCAL_MIRROR" = true ]; then
   rm -f .repo/local_manifests/proprietary.xml
   if [ "$INCLUDE_PROPRIETARY" = true ]; then
     wget -q -O .repo/local_manifests/proprietary.xml "https://raw.githubusercontent.com/TheMuppets/manifests/mirror/default.xml"
-    /root/build_manifest.py --remote "https://gitlab.com" --remotename "gitlab_https" \
-      "https://gitlab.com/the-muppets/manifest/raw/mirror/default.xml" .repo/local_manifests/proprietary_gitlab.xml
   fi
 
   echo ">> [$(date)] Syncing mirror repository" | tee -a "$repo_log"
