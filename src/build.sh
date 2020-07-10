@@ -350,12 +350,14 @@ for branch in ${BRANCH_NAME//,/ }; do
           for build in lineage-*.zip; do
             sha256sum "$build" > "$ZIP_DIR/$zipsubdir/$build.sha256sum"
           done
+          ZIPFILENAME="$(ls lineage-*.zip | sed 's/\.zip$//')"
           find . -maxdepth 1 -name 'lineage-*.zip*' -type f -exec mv {} "$ZIP_DIR/$zipsubdir/" \; &>> "$DEBUG_LOG"
+          cp system/build.prop "$ZIP_DIR/$zipsubdir/$ZIPFILENAME.zip.prop"
           find . -maxdepth 1 -name '*build.prop*' -type f -exec mv {} "$ZIP_DIR/$zipsubdir/" \; &>> "$DEBUG_LOG"
 
           if [ "$BOOT_IMG" = true ]; then
-            find . -maxdepth 1 -name 'boot.img' -type f -exec mv {} "$ZIP_DIR/$zipsubdir/" \; &>> "$DEBUG_LOG"
-            find . -maxdepth 1 -name 'recovery.img' -type f -exec mv {} "$ZIP_DIR/$zipsubdir/" \; &>> "$DEBUG_LOG"
+            cp -p boot.img "$ZIP_DIR/$zipsubdir/${ZIPFILENAME}-boot.img"
+            cp -p recovery.img "$ZIP_DIR/$zipsubdir/${ZIPFILENAME}-recovery.img"
           fi
           cd "$source_dir"
           build_successful=true
