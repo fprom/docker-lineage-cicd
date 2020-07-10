@@ -22,9 +22,9 @@ repo_log="$LOGS_DIR/repo-$(date +%Y%m%d).log"
 # cd to working directory
 cd "$SRC_DIR"
 
-if [ -f /root/userscripts/begin.sh ]; then
+if [ -f "$USERSCRIPTS_DIR"/begin.sh ]; then
   echo ">> [$(date)] Running begin.sh"
-  /root/userscripts/begin.sh
+  "$USERSCRIPTS_DIR"/begin.sh || { echo ">> [$(date)] ERROR: userscript failed. aborting"; exit 1; }
 fi
 
 # If requested, clean the OUT dir in order to avoid clutter
@@ -284,10 +284,10 @@ for branch in ${BRANCH_NAME//,/ }; do
     for codename in ${devices//,/ }; do
       if ! [ -z "$codename" ]; then
 
-        if [ -f /root/userscripts/before.sh ]; then
+        if [ -f "$USERSCRIPTS_DIR"/before.sh ]; then
             echo ">> [$(date)] Running before.sh"
             breakfast $codename
-            /root/userscripts/before.sh
+            "$USERSCRIPTS_DIR"/before.sh || { echo ">> [$(date)] ERROR: userscript failed. aborting"; exit 1; }
         fi
 
         currentdate=$(date +%Y%m%d)
@@ -330,9 +330,9 @@ for branch in ${BRANCH_NAME//,/ }; do
 
         DEBUG_LOG="$LOGS_DIR/$logsubdir/lineage-$los_ver-$builddate-$RELEASE_TYPE-$codename.log"
 
-        if [ -f /root/userscripts/pre-build.sh ]; then
+        if [ -f "$USERSCRIPTS_DIR"/pre-build.sh ]; then
           echo ">> [$(date)] Running pre-build.sh for $codename" >> "$DEBUG_LOG"
-          /root/userscripts/pre-build.sh $codename &>> "$DEBUG_LOG"
+          "$USERSCRIPTS_DIR"/pre-build.sh $codename &>> "$DEBUG_LOG" || { echo ">> [$(date)] ERROR: userscript failed. aborting"; exit 1; }
         fi
 
         # Start the build
@@ -378,9 +378,9 @@ for branch in ${BRANCH_NAME//,/ }; do
             /usr/bin/python /root/clean_up.py -n $DELETE_OLD_LOGS -V $los_ver -N 1 -c $codename "$LOGS_DIR"
           fi
         fi
-        if [ -f /root/userscripts/post-build.sh ]; then
+        if [ -f "$USERSCRIPTS_DIR"/post-build.sh ]; then
           echo ">> [$(date)] Running post-build.sh for $codename" >> "$DEBUG_LOG"
-          /root/userscripts/post-build.sh $codename $build_successful &>> "$DEBUG_LOG"
+          "$USERSCRIPTS_DIR"/post-build.sh $codename $build_successful &>> "$DEBUG_LOG" || { echo ">> [$(date)] ERROR: userscript failed. aborting"; exit 1; }
         fi
         echo ">> [$(date)] Finishing build for $codename" | tee -a "$DEBUG_LOG"
 
@@ -420,7 +420,7 @@ if [ "$DELETE_OLD_LOGS" -gt "0" ]; then
   find "$LOGS_DIR" -maxdepth 1 -name repo-*.log | sort | head -n -$DELETE_OLD_LOGS | xargs -r rm
 fi
 
-if [ -f /root/userscripts/end.sh ]; then
+if [ -f "$USERSCRIPTS_DIR"/end.sh ]; then
   echo ">> [$(date)] Running end.sh"
-  /root/userscripts/end.sh
+  "$USERSCRIPTS_DIR"/end.sh
 fi
